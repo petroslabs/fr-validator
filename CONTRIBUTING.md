@@ -20,6 +20,10 @@ composer check   # runs tests, PHPStan (level max) and the code style check
 Or individually: `composer test`, `composer stan`, `composer cs` (check only)
 / `composer cs-fix` (auto-fix).
 
+Mutation testing (`composer infection`) runs in CI on every PR and requires a
+coverage driver (pcov or Xdebug) that isn't set up locally by default — don't
+worry about running it yourself, the CI job covers it.
+
 ## Adding or changing a validator
 
 This package's whole point is rigor over copy-pasted regexes. If you touch a
@@ -38,6 +42,9 @@ validator:
    for the pattern.
 4. Document known limitations explicitly in the README rather than silently
    under-handling edge cases.
+5. Test each branch, not just the happy path and one failure — mutation
+   testing (Infection) runs in CI and will flag conditions your tests don't
+   actually exercise.
 
 ## Commit messages
 

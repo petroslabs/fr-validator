@@ -37,7 +37,7 @@
         "stan": "phpstan analyse",
         "cs": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix",
-        "infection": "infection --min-msi=85 --min-covered-msi=90",
+        "infection": "infection --min-msi=100 --min-covered-msi=100",
         "check": [
             "@test",
             "@stan",

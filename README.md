@@ -30,8 +30,10 @@ composer require petroslabs/fr-validator
 
 ```php
 use PetrosLabs\FrValidator\Nir\NirValidator;
+use PetrosLabs\FrValidator\Rib\RibValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
+$result = (new RibValidator())->validate('30003 01890 00037553485 21');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -43,7 +45,7 @@ if (!$result->isValid()) {
 | Validator | Status |
 |---|---|
 | NIR (social security number) | ✅ available |
-| RIB key | planned |
+| RIB key | ✅ available |
 | SIRET / SIREN | planned |
 | IBAN / BIC (France-specific checks) | planned |
 | Phone number | planned |

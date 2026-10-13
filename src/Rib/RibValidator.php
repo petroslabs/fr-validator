@@ -67,11 +67,14 @@ final class RibValidator implements RibValidatorInterface
 
         $convertedAccountNumber = strtr($accountNumber, self::LETTER_TO_DIGIT);
 
-        // The (int) casts are required for PHPStan (PHP 8 throws on
-        // non-numeric string arithmetic, which it can't rule out statically),
-        // but are runtime no-ops given the digit-only strings validated
-        // above — Infection's CastInt mutator correctly can't kill them.
-        // @infection-ignore-next-line CastInt
+        /**
+         * The (int) casts are required for PHPStan (PHP 8 throws on
+         * non-numeric string arithmetic, which it can't rule out statically),
+         * but are runtime no-ops given the digit-only strings validated
+         * above — Infection's CastInt mutator correctly can't kill them.
+         *
+         * @infection-ignore-all
+         */
         $checksum = 89 * (int) $bankCode + 15 * (int) $branchCode + 3 * (int) $convertedAccountNumber;
         $expectedKey = 97 - ($checksum % 97);
 

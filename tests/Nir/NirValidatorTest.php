@@ -69,6 +69,7 @@ final class NirValidatorTest extends TestCase
         yield 'department 20 does not exist (split into 2A/2B)' => ['185032011601216', NirFailureReason::INVALID_DEPARTMENT_CODE];
         yield 'department 96 does not exist' => ['185039611601216', NirFailureReason::INVALID_DEPARTMENT_CODE];
         yield 'non-digit commune code' => ['185037511X01216', NirFailureReason::INVALID_FORMAT];
+        yield 'non-digit order number' => ['18503751160X216', NirFailureReason::INVALID_FORMAT];
         yield 'wrong checksum' => ['185037511601299', NirFailureReason::INVALID_CHECKSUM];
     }
 }

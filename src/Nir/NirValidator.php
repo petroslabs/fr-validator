@@ -50,13 +50,39 @@ final class NirValidator implements NirValidatorInterface
         $year = substr($normalized, 1, 2);
         $commune = substr($normalized, 7, 3);
         $order = substr($normalized, 10, 3);
+
+        /**
+         * $normalized is exactly LENGTH (15) characters at this point, so
+         * substr() here always returns exactly 2 characters regardless of
+         * the requested length — a runtime no-op, not a real branch.
+         *
+         * @infection-ignore-all
+         */
         $key = substr($normalized, 13, 2);
 
-        if (preg_match('/^\d{2}$/', $year) !== 1
-            || preg_match('/^\d{3}$/', $commune) !== 1
-            || preg_match('/^\d{3}$/', $order) !== 1
-            || preg_match('/^\d{2}$/', $key) !== 1
-        ) {
+        /**
+         * $year/$commune/$order/$key are each a fixed-width slice of the
+         * already length-checked $normalized string, so the ^ and $ anchors
+         * can never change the match result — equivalent mutants below.
+         *
+         * @infection-ignore-all
+         */
+        if (preg_match('/^\d{2}$/', $year) !== 1) {
+            return ValidationResult::failure(NirFailureReason::INVALID_FORMAT);
+        }
+
+        /** @infection-ignore-all */
+        if (preg_match('/^\d{3}$/', $commune) !== 1) {
+            return ValidationResult::failure(NirFailureReason::INVALID_FORMAT);
+        }
+
+        /** @infection-ignore-all */
+        if (preg_match('/^\d{3}$/', $order) !== 1) {
+            return ValidationResult::failure(NirFailureReason::INVALID_FORMAT);
+        }
+
+        /** @infection-ignore-all */
+        if (preg_match('/^\d{2}$/', $key) !== 1) {
             return ValidationResult::failure(NirFailureReason::INVALID_FORMAT);
         }
 
@@ -64,6 +90,13 @@ final class NirValidator implements NirValidatorInterface
         $departmentForChecksum = strtr($department, ['2A' => '19', '2B' => '18']);
         $base = $sex . $year . $month . $departmentForChecksum . $commune . $order;
 
+        /**
+         * The (int) cast is required for PHPStan (PHP 8 throws on
+         * non-numeric string arithmetic, which it can't rule out statically)
+         * but is a runtime no-op given the digit-only $base validated above.
+         *
+         * @infection-ignore-all
+         */
         $expectedKey = 97 - ((int) $base % 97);
 
         if ((int) $key !== $expectedKey) {

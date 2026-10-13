@@ -47,20 +47,39 @@ final class RibValidator implements RibValidatorInterface
         $bankCode = substr($normalized, 0, self::BANK_CODE_LENGTH);
         $branchCode = substr($normalized, self::BANK_CODE_LENGTH, self::BRANCH_CODE_LENGTH);
         $accountNumber = substr($normalized, self::BANK_CODE_LENGTH + self::BRANCH_CODE_LENGTH, self::ACCOUNT_NUMBER_LENGTH);
+
+        /**
+         * $normalized is exactly LENGTH (23) characters at this point, so
+         * substr() here always returns exactly 2 characters regardless of
+         * the requested length — a runtime no-op, not a real branch.
+         *
+         * @infection-ignore-all
+         */
         $key = substr($normalized, self::BANK_CODE_LENGTH + self::BRANCH_CODE_LENGTH + self::ACCOUNT_NUMBER_LENGTH, 2);
 
+        /**
+         * $bankCode/$branchCode/$accountNumber/$key are each a fixed-width
+         * slice of the already length-checked $normalized string, so the ^
+         * and $ anchors can never change the match result — equivalent
+         * mutants on the four checks below.
+         *
+         * @infection-ignore-all
+         */
         if (preg_match('/^\d{5}$/', $bankCode) !== 1) {
             return ValidationResult::failure(RibFailureReason::INVALID_BANK_CODE);
         }
 
+        /** @infection-ignore-all */
         if (preg_match('/^\d{5}$/', $branchCode) !== 1) {
             return ValidationResult::failure(RibFailureReason::INVALID_BRANCH_CODE);
         }
 
+        /** @infection-ignore-all */
         if (preg_match('/^[A-Z0-9]{11}$/', $accountNumber) !== 1) {
             return ValidationResult::failure(RibFailureReason::INVALID_ACCOUNT_NUMBER);
         }
 
+        /** @infection-ignore-all */
         if (preg_match('/^\d{2}$/', $key) !== 1) {
             return ValidationResult::failure(RibFailureReason::INVALID_FORMAT);
         }

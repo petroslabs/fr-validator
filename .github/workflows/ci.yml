@@ -65,5 +65,14 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
 
+      - name: Install Infection
+        # Not in composer.json: infection/infection ^0.35 requires PHP ^8.3,
+        # which would break dependency resolution on the PHP 8.2 test job.
+        # Required here only, in this job's own ephemeral checkout.
+        run: composer require --dev infection/infection:^0.35 --no-interaction --no-update
+
+      - name: Install dependencies (with Infection)
+        run: composer update --prefer-dist --no-progress
+
       - name: Run Infection
         run: composer infection

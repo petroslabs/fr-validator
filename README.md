@@ -20,6 +20,16 @@ verified against primary sources rather than copy-pasted from blog posts —
 several widely circulated "example NIR" numbers online don't actually satisfy
 the official checksum formula.
 
+Tests are checked with [mutation testing](https://infection.github.io/)
+(Infection), not just line coverage: CI deliberately mutates the code (flips
+a `||` to `&&`, drops a regex anchor, changes a checksum constant...) and
+fails the build if any test suite still passes. 100% line coverage can hide
+assertions that never actually run; a 100% mutation score means every
+intentionally broken behavior gets caught by an actual test. Equivalent
+mutants (changes that provably can't affect behavior, e.g. a redundant cast
+needed only for static analysis) are explicitly marked `@infection-ignore-all`
+with a one-line reason instead of padding the required score.
+
 ## Installation
 
 ```bash

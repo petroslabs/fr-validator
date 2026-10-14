@@ -1,7 +1,7 @@
 # fr-validator
 
 [![CI](https://github.com/petroslabs/fr-validator/actions/workflows/ci.yml/badge.svg)](https://github.com/petroslabs/fr-validator/actions/workflows/ci.yml)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/petroslabs/fr-validator/main)](https://dashboard.stryker-mutator.io/reports/github.com/petroslabs/fr-validator/main)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fpetroslabs%2Ffr-validator%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/petroslabs/fr-validator/main)
 [![Packagist](https://img.shields.io/packagist/v/petroslabs/fr-validator)](https://packagist.org/packages/petroslabs/fr-validator)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 

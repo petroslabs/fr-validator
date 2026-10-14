@@ -43,10 +43,14 @@ composer require petroslabs/fr-validator
 use PetrosLabs\FrValidator\Nir\NirValidator;
 use PetrosLabs\FrValidator\Rib\RibValidator;
 use PetrosLabs\FrValidator\Siret\SiretValidator;
+use PetrosLabs\FrValidator\Iban\IbanValidator;
+use PetrosLabs\FrValidator\Bic\BicValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
 $result = (new RibValidator())->validate('30003 01890 00037553485 21');
 $result = (new SiretValidator())->validate('732 829 320 00074');
+$result = (new IbanValidator())->validate('FR76 3000 3018 9000 0375 5348 521');
+$result = (new BicValidator())->validate('BNPAFRPP');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -60,7 +64,8 @@ if (!$result->isValid()) {
 | NIR (social security number) | ✅ available |
 | RIB key | ✅ available |
 | SIRET / SIREN | ✅ available |
-| IBAN / BIC (France-specific checks) | planned |
+| IBAN (France-specific) | ✅ available |
+| BIC (general ISO 9362 format) | ✅ available |
 | Phone number | planned |
 
 ### NIR — known limitations (v1)
@@ -78,6 +83,22 @@ only. A number can be checksum-valid and still not correspond to a real,
 active establishment — that requires an actual lookup against the INSEE
 Sirene API, which is out of scope here (this package never makes network
 calls).
+
+### IBAN/BIC — scope
+
+`IbanValidator` only accepts French IBANs (`FR` + 23-character BBAN). It
+checks both the generic ISO 7064 check digits and, independently, that the
+embedded BBAN is itself a valid RIB — a forged account number can still end
+up wrapped in "correct-looking" IBAN check digits, since those only protect
+the IBAN as a whole, not the bank/branch/account consistency inside it.
+
+`BicValidator` is the odd one out in this package: BIC/SWIFT (ISO 9362) has
+no French-specific variant, so it validates the general international
+format (8 or 11 characters) rather than being restricted to French banks —
+restricting it to country code `FR` would make it useless for validating
+the counterparty side of a SEPA transfer. There is no checksum digit for a
+BIC, so this only proves the format is well-formed, not that the code is
+actually registered.
 
 ## Development
 

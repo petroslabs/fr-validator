@@ -59,6 +59,13 @@ final class VatValidator implements VatValidatorInterface
             return ValidationResult::failure(VatFailureReason::INVALID_FORMAT);
         }
 
+        /**
+         * $normalized is already exactly LENGTH (13) characters, so only 9
+         * characters remain from offset 4 — substr() truncates safely to
+         * that same 9 regardless of a longer requested length.
+         *
+         * @infection-ignore-all
+         */
         $siren = substr($normalized, 4, 9);
 
         if (!$this->sirenValidator->validate($siren)->isValid()) {

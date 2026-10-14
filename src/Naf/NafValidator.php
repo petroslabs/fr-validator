@@ -16,10 +16,25 @@ use PetrosLabs\FrValidator\ValidationResult;
  * This only proves the code exists in the nomenclature, not that it's the
  * code actually assigned to a given company — that requires a lookup
  * against the INSEE Sirene database, out of scope here.
+ *
+ * The embedded list is a snapshot, not a live lookup (this package never
+ * makes network calls) — it will reject a real code INSEE adds after this
+ * version was published, until a new release regenerates it. Pass extra
+ * codes via $additionalCodes to unblock that without waiting for a release.
  */
 final class NafValidator implements NafValidatorInterface
 {
     private const LENGTH = 5;
+
+    /**
+     * @param list<string> $additionalCodes extra codes to accept on top of
+     *     the embedded nomenclature, e.g. a code INSEE has added since this
+     *     package version was released
+     */
+    public function __construct(
+        private readonly array $additionalCodes = [],
+    ) {
+    }
 
     public function validate(string $naf): ValidationResult
     {
@@ -39,7 +54,7 @@ final class NafValidator implements NafValidatorInterface
             return ValidationResult::failure(NafFailureReason::INVALID_FORMAT);
         }
 
-        if (!isset(NafCodes::CODES[$normalized])) {
+        if (!isset(NafCodes::CODES[$normalized]) && !in_array($normalized, $this->additionalCodes, true)) {
             return ValidationResult::failure(NafFailureReason::UNKNOWN_CODE);
         }
 

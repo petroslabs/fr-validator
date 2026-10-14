@@ -136,9 +136,17 @@ republication of that nomenclature on data.gouv.fr (Métropole de Lyon,
 Open Licence 2.0) — not hand-typed, and not the full list with labels,
 just the codes needed to validate membership. This proves the code exists
 in the nomenclature, not that it's the code actually assigned to a given
-company (that needs an INSEE Sirene lookup, out of scope here), and it will
-go stale whenever INSEE revises the nomenclature — see
-[CONTRIBUTING.md](CONTRIBUTING.md) to propose a refresh.
+company (that needs an INSEE Sirene lookup, out of scope here).
+
+Since this package never makes network calls, the list is a snapshot, not
+a live lookup: a real code INSEE adds after this version was published
+will be rejected as `unknown_code` until a new release regenerates it (see
+[CONTRIBUTING.md](CONTRIBUTING.md)). To unblock that without waiting for a
+release, pass it as an extra code:
+
+```php
+new NafValidator(additionalCodes: ['1234A']);
+```
 
 ## Development
 

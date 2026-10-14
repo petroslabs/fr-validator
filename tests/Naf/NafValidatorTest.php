@@ -63,4 +63,23 @@ final class NafValidatorTest extends TestCase
         yield 'digit in letter position' => ['62019', NafFailureReason::INVALID_FORMAT];
         yield 'well-formed but not in the nomenclature' => ['0000A', NafFailureReason::UNKNOWN_CODE];
     }
+
+    #[Test]
+    public function it_accepts_a_code_not_in_the_nomenclature_when_passed_as_additional(): void
+    {
+        $validator = new NafValidator(['0000A']);
+
+        self::assertTrue($validator->validate('0000A')->isValid());
+    }
+
+    #[Test]
+    public function it_still_rejects_unlisted_codes_when_additional_codes_are_set(): void
+    {
+        $validator = new NafValidator(['0000A']);
+
+        $result = $validator->validate('9999Z');
+
+        self::assertFalse($result->isValid());
+        self::assertSame(NafFailureReason::UNKNOWN_CODE, $result->failureReason());
+    }
 }

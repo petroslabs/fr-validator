@@ -70,6 +70,14 @@ final class SiretValidator implements SiretValidatorInterface
 
     private function digitSum(string $digits): int
     {
+        /**
+         * array_map('intval', ...) is required for PHPStan (array_sum's
+         * signature doesn't guarantee numeric-string elements sum safely)
+         * but is a runtime no-op: $digits is already validated as 14 plain
+         * digit characters by the time this is called.
+         *
+         * @infection-ignore-all
+         */
         return array_sum(array_map('intval', str_split($digits)));
     }
 }

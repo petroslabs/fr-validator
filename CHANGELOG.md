@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-14
+
+### Fixed
+
+- `FailureReason` now extends `\BackedEnum`, so `->value` is statically
+  known wherever code is typed against the generic interface instead of a
+  specific validator's enum — needed by the Symfony bridge package.
+
 ## [0.1.0] - 2026-10-14
 
 ### Added
@@ -25,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Every `*ValidatorInterface` now extends a common `ValidatorInterface`
   (purely additive — existing code is unaffected).
 
-[Unreleased]: https://github.com/petroslabs/fr-validator/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/petroslabs/fr-validator/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/petroslabs/fr-validator/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/petroslabs/fr-validator/releases/tag/v0.1.0

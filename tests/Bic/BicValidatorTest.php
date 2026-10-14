@@ -62,6 +62,7 @@ final class BicValidatorTest extends TestCase
         yield 'in between 8 and 11' => ['ABCDFRPPX', BicFailureReason::INVALID_LENGTH];
         yield 'too long' => ['ABCDFRPPXXXX', BicFailureReason::INVALID_LENGTH];
         yield 'digit in bank code' => ['ABC1FRPP', BicFailureReason::INVALID_BANK_CODE];
+        yield 'digit in bank code, first position' => ['1BCDFRPP', BicFailureReason::INVALID_BANK_CODE];
         yield 'digit in country code' => ['ABCDF1PP', BicFailureReason::INVALID_COUNTRY_CODE];
         yield 'disallowed character in location code' => ['ABCDFR!P', BicFailureReason::INVALID_LOCATION_CODE];
         yield 'disallowed character in branch code' => ['ABCDFRPPX!X', BicFailureReason::INVALID_BRANCH_CODE];

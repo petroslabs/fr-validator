@@ -39,6 +39,7 @@ final class IbanValidatorTest extends TestCase
     {
         yield 'standard' => ['FR7630003018900003755348521'];
         yield 'with spaces, lowercase country code' => ['fr76 3000 3018 9000 0375 5348 521'];
+        yield 'letter in account number (matches Wikipedia RIB example)' => ['FR8412345123451234567891A16'];
     }
 
     #[Test]
@@ -60,6 +61,7 @@ final class IbanValidatorTest extends TestCase
         yield 'too long' => ['FR76300030189000037553485211', IbanFailureReason::INVALID_LENGTH];
         yield 'non-French country code' => ['DE7630003018900003755348521', IbanFailureReason::INVALID_COUNTRY_CODE];
         yield 'non-digit check digits' => ['FRXX30003018900003755348521', IbanFailureReason::INVALID_FORMAT];
+        yield 'non-digit check digit, first position' => ['FRX630003018900003755348521', IbanFailureReason::INVALID_FORMAT];
         yield 'embedded RIB has the wrong key' => ['FR0730003018900003755348599', IbanFailureReason::INVALID_RIB];
         yield 'wrong IBAN checksum, valid RIB' => ['FR0030003018900003755348521', IbanFailureReason::INVALID_CHECKSUM];
     }

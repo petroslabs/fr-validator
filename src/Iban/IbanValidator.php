@@ -88,6 +88,14 @@ final class IbanValidator implements IbanValidatorInterface
         foreach (str_split($rearranged) as $char) {
             $value = ctype_digit($char) ? $char : (string) (ord($char) - ord('A') + 10);
 
+            /**
+             * $digit is always a single numeric-digit character here (from
+             * the original digits or from the computed letter-to-number
+             * value), so the (int) cast — needed for PHPStan — is a
+             * runtime no-op.
+             *
+             * @infection-ignore-all
+             */
             foreach (str_split($value) as $digit) {
                 $remainder = ($remainder * 10 + (int) $digit) % 97;
             }

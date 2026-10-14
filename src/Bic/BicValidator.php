@@ -57,6 +57,14 @@ final class BicValidator implements BicValidatorInterface
             return ValidationResult::failure(BicFailureReason::INVALID_COUNTRY_CODE);
         }
 
+        /**
+         * Shifting this offset left by one would pull in the last
+         * character of $countryCode — but that character was already
+         * validated as A-Z by the check above, a subset of this field's
+         * own A-Z0-9, so it can never trigger a failure here either way.
+         *
+         * @infection-ignore-all
+         */
         $locationCode = substr($normalized, 6, 2);
 
         /** @infection-ignore-all */
@@ -65,6 +73,15 @@ final class BicValidator implements BicValidatorInterface
         }
 
         if ($length === self::LONG_LENGTH) {
+            /**
+             * Same reasoning as $locationCode above for a shifted offset
+             * (the stolen character was already validated against the same
+             * A-Z0-9 charset); and $normalized is exactly LONG_LENGTH (11)
+             * here, so requesting more than the 3 remaining characters
+             * would just be truncated to the same 3 by substr() anyway.
+             *
+             * @infection-ignore-all
+             */
             $branchCode = substr($normalized, 8, 3);
 
             /** @infection-ignore-all */

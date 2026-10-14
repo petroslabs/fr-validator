@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Framework-agnostic validators for French identifiers: NIR (social security
-number), RIB key, SIRET/SIREN, IBAN/BIC, phone numbers.
+number), RIB key, SIRET/SIREN, IBAN/BIC, VAT number, phone numbers.
 
 No dependency on any framework. A Symfony bridge exposing these as
 `Constraint`/`ConstraintValidator` lives in a separate package,
@@ -46,6 +46,7 @@ use PetrosLabs\FrValidator\Siret\SiretValidator;
 use PetrosLabs\FrValidator\Iban\IbanValidator;
 use PetrosLabs\FrValidator\Bic\BicValidator;
 use PetrosLabs\FrValidator\Phone\PhoneValidator;
+use PetrosLabs\FrValidator\Vat\VatValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
 $result = (new RibValidator())->validate('30003 01890 00037553485 21');
@@ -53,6 +54,7 @@ $result = (new SiretValidator())->validate('732 829 320 00074');
 $result = (new IbanValidator())->validate('FR76 3000 3018 9000 0375 5348 521');
 $result = (new BicValidator())->validate('BNPAFRPP');
 $result = (new PhoneValidator())->validate('06 12 34 56 78');
+$result = (new VatValidator())->validate('FR 44 732 829 320');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -68,6 +70,7 @@ if (!$result->isValid()) {
 | SIRET / SIREN | ✅ available |
 | IBAN (France-specific) | ✅ available |
 | BIC (general ISO 9362 format) | ✅ available |
+| VAT number (France-specific) | ✅ available |
 | Phone number | ✅ available |
 
 ### NIR — known limitations (v1)
@@ -101,6 +104,15 @@ restricting it to country code `FR` would make it useless for validating
 the counterparty side of a SEPA transfer. There is no checksum digit for a
 BIC, so this only proves the format is well-formed, not that the code is
 actually registered.
+
+### VAT number — known limitations (v1)
+
+Only the standard, fully numeric key (`FR` + 2 digits + 9-digit SIREN) is
+supported — like SIRET, the embedded SIREN must independently pass its own
+Luhn check in addition to the key formula matching. Some historical French
+VAT numbers are known to use a key containing letters instead; that format
+couldn't be confirmed against a reliable primary source, so it isn't
+guessed at.
 
 ### Phone number — known limitations (v1)
 

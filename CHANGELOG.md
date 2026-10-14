@@ -15,3 +15,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IBAN validator (French IBANs only).
 - BIC validator (general ISO 9362 format).
 - Phone number validator (format only, national and +33/0033 international).
+- French VAT number validator (standard numeric key only).

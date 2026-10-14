@@ -11,3 +11,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NIR (French social security number) validator.
 - RIB key validator.
+- SIREN and SIRET validators.

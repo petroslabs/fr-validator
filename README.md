@@ -42,9 +42,11 @@ composer require petroslabs/fr-validator
 ```php
 use PetrosLabs\FrValidator\Nir\NirValidator;
 use PetrosLabs\FrValidator\Rib\RibValidator;
+use PetrosLabs\FrValidator\Siret\SiretValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
 $result = (new RibValidator())->validate('30003 01890 00037553485 21');
+$result = (new SiretValidator())->validate('732 829 320 00074');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -57,7 +59,7 @@ if (!$result->isValid()) {
 |---|---|
 | NIR (social security number) | ✅ available |
 | RIB key | ✅ available |
-| SIRET / SIREN | planned |
+| SIRET / SIREN | ✅ available |
 | IBAN / BIC (France-specific checks) | planned |
 | Phone number | planned |
 
@@ -68,6 +70,14 @@ Temporary/technical registration numbers (sex digit `3`, `4`, `7`, `8`) and the
 special month codes used for incomplete birth records are **not** validated —
 their exact format could not be confirmed against a reliable primary source,
 so they're left out rather than guessed at.
+
+### SIRET/SIREN — what the check actually proves
+
+Validates the Luhn checksum (and SIRET's SIREN+sum-of-5 La Poste exception)
+only. A number can be checksum-valid and still not correspond to a real,
+active establishment — that requires an actual lookup against the INSEE
+Sirene API, which is out of scope here (this package never makes network
+calls).
 
 ## Development
 

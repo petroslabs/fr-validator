@@ -45,12 +45,14 @@ use PetrosLabs\FrValidator\Rib\RibValidator;
 use PetrosLabs\FrValidator\Siret\SiretValidator;
 use PetrosLabs\FrValidator\Iban\IbanValidator;
 use PetrosLabs\FrValidator\Bic\BicValidator;
+use PetrosLabs\FrValidator\Phone\PhoneValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
 $result = (new RibValidator())->validate('30003 01890 00037553485 21');
 $result = (new SiretValidator())->validate('732 829 320 00074');
 $result = (new IbanValidator())->validate('FR76 3000 3018 9000 0375 5348 521');
 $result = (new BicValidator())->validate('BNPAFRPP');
+$result = (new PhoneValidator())->validate('06 12 34 56 78');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -66,7 +68,7 @@ if (!$result->isValid()) {
 | SIRET / SIREN | ✅ available |
 | IBAN (France-specific) | ✅ available |
 | BIC (general ISO 9362 format) | ✅ available |
-| Phone number | planned |
+| Phone number | ✅ available |
 
 ### NIR — known limitations (v1)
 
@@ -99,6 +101,16 @@ restricting it to country code `FR` would make it useless for validating
 the counterparty side of a SEPA transfer. There is no checksum digit for a
 BIC, so this only proves the format is well-formed, not that the code is
 actually registered.
+
+### Phone number — known limitations (v1)
+
+Format only: 10 digits starting with `0` (second digit `1`-`9`), or the
+international `+33`/`0033` equivalent. It does **not** classify the number
+as mobile/landline/VoIP (that depends on the exact second-digit allocation,
+which isn't needed to just validate the shape) and doesn't special-case
+DOM/TOM numbers (they already follow the same 10-digit structure). The
+`+33(0)...` notation some websites display is **not** accepted — strip the
+parenthesized `0` before validating.
 
 ## Development
 

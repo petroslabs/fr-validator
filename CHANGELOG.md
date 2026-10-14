@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-14
+
 ### Added
 
 - NIR (French social security number) validator.
@@ -22,3 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Every `*ValidatorInterface` now extends a common `ValidatorInterface`
   (purely additive — existing code is unaffected).
+
+[Unreleased]: https://github.com/petroslabs/fr-validator/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/petroslabs/fr-validator/releases/tag/v0.1.0

@@ -47,6 +47,7 @@ use PetrosLabs\FrValidator\Iban\IbanValidator;
 use PetrosLabs\FrValidator\Bic\BicValidator;
 use PetrosLabs\FrValidator\Phone\PhoneValidator;
 use PetrosLabs\FrValidator\Vat\VatValidator;
+use PetrosLabs\FrValidator\Naf\NafValidator;
 
 $result = (new NirValidator())->validate('1 85 03 75 116 012 16');
 $result = (new RibValidator())->validate('30003 01890 00037553485 21');
@@ -55,6 +56,7 @@ $result = (new IbanValidator())->validate('FR76 3000 3018 9000 0375 5348 521');
 $result = (new BicValidator())->validate('BNPAFRPP');
 $result = (new PhoneValidator())->validate('06 12 34 56 78');
 $result = (new VatValidator())->validate('FR 44 732 829 320');
+$result = (new NafValidator())->validate('62.01Z');
 
 if (!$result->isValid()) {
     echo $result->failureReason()->value; // e.g. "invalid_checksum"
@@ -72,6 +74,7 @@ if (!$result->isValid()) {
 | BIC (general ISO 9362 format) | ✅ available |
 | VAT number (France-specific) | ✅ available |
 | Phone number | ✅ available |
+| NAF/APE activity code | ✅ available |
 
 ### NIR — known limitations (v1)
 
@@ -123,6 +126,19 @@ which isn't needed to just validate the shape) and doesn't special-case
 DOM/TOM numbers (they already follow the same 10-digit structure). The
 `+33(0)...` notation some websites display is **not** accepted — strip the
 parenthesized `0` before validating.
+
+### NAF/APE — what the check actually proves
+
+Unlike every other validator in this package, there's no checksum: a NAF
+code is valid only if it's one of the 732 sub-classes of the official INSEE
+nomenclature (rev. 2, 2008), embedded as a lookup table generated from a
+republication of that nomenclature on data.gouv.fr (Métropole de Lyon,
+Open Licence 2.0) — not hand-typed, and not the full list with labels,
+just the codes needed to validate membership. This proves the code exists
+in the nomenclature, not that it's the code actually assigned to a given
+company (that needs an INSEE Sirene lookup, out of scope here), and it will
+go stale whenever INSEE revises the nomenclature — see
+[CONTRIBUTING.md](CONTRIBUTING.md) to propose a refresh.
 
 ## Development
 

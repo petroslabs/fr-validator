@@ -16,3 +16,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BIC validator (general ISO 9362 format).
 - Phone number validator (format only, national and +33/0033 international).
 - French VAT number validator (standard numeric key only).
+- NAF/APE activity code validator (lookup against the 732-code INSEE nomenclature).

@@ -46,6 +46,15 @@ validator:
    testing (Infection) runs in CI and will flag conditions your tests don't
    actually exercise.
 
+## Refreshing the NAF code list
+
+`src/Naf/NafCodes.php` is generated, not hand-edited. When INSEE revises
+the NAF nomenclature, regenerate it from an official or clearly-sourced
+republication of the new list (e.g. data.gouv.fr) with a small script — one
+row per code, normalized to 4 digits + 1 uppercase letter, no dots — rather
+than editing the generated file directly. Update the `@see` links in its
+docblock to the new source and note the nomenclature revision in the PR.
+
 ## Commit messages
 
 [Conventional Commits](https://www.conventionalcommits.org/), imperative,
